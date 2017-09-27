@@ -1,0 +1,95 @@
+make following directories if you dont have them.
+./CSC440 - (running commands in this directory)
+./CSC440/database - (all directories go here. menus directory, sql directory, ...)
+./CSC440/classes - (.class files generated here)
+
+**Note on expandrive. files are not updated regularly. when in doubt check putty interface for files.
+
+copy source files to \CSC440\database
+login to eos. navigate to \CSC440
+
+run the following:
+
+export CLASSPATH=".:/afs/bp.ncsu.edu/dist/oracle10g/.install/i386_linux26/OraHome1/jdbc/lib/classes12.jar"
+alias java="java -cp .:/afs/bp.ncsu.edu/dist/oracle10g/.install/i386_linux26/OraHome1/jdbc/lib/classes12.jar"
+add jdk142
+
+database/actions/add/AddCharge.java
+database/actions/add/AddCustomer.java
+database/actions/add/AddFrontDeskRepresentative.java
+database/actions/add/AddReservation.java
+database/actions/add/AddRoom.java
+database/actions/add/AddStaff.java
+database/actions/delete/DeleteCharge.java
+database/actions/delete/DeleteCustomer.java
+database/actions/delete/DeleteFrontDeskRepresentative.java
+database/actions/delete/DeleteReservation.java
+database/actions/delete/DeleteRoom.java
+database/actions/delete/DeleteStaff.java
+database/actions/edit/EditCustomer.java
+database/actions/edit/EditFrontDeskRepresentative.java
+database/actions/edit/EditReservation.java
+database/actions/edit/EditRoom.java
+database/actions/edit/EditStaff.java
+database/actions/get/GetAllFrontDeskRepresentatives.java
+database/actions/get/GetAllManagers.java
+database/actions/get/GetAllStaff.java
+database/actions/get/GetAvRooms.java
+database/actions/get/GetCharges.java
+database/actions/get/GetCustomer.java
+database/actions/get/GetCustomerReservations.java
+database/actions/get/GetCustomerServedBy.java
+database/actions/get/GetFrontDeskRepresentative.java
+database/actions/get/GetManager.java
+database/actions/get/GetOccupancy.java
+database/actions/get/GetOccupancyPercentage.java
+database/actions/get/GetReservation.java
+database/actions/get/GetReservations.java
+database/actions/get/GetRoom.java
+database/actions/get/GetStaff.java
+database/actions/get/GetPresidentialSuite.java
+
+database/actions/validate/ValidateCustomer.java
+database/actions/validate/ValidateFrontDeskRepresentative.java
+database/actions/validate/ValidateHotel.java
+database/actions/validate/ValidateManager.java
+database/actions/validate/ValidateRoom.java
+database/actions/validate/ValidateStaff.java
+
+database/database/DBUtil.java
+database/database/JavaDatabaseConnection.java
+
+database/menus/CustomerMenu.java
+database/menus/FDRMenu.java
+database/menus/ManagerMenu.java
+database/menus/OriginalMenu.java
+database/menus/StaffMenu.java
+
+database/models/Bill.java
+database/models/Charge.java
+database/models/Customer.java
+database/models/Hotel.java
+database/models/Reservation.java
+database/models/Room.java
+database/models/Staff.java
+database/models/WolfVillasChain.java
+database/models/PresidentialSuite.java 
+
+
+database/sql/ChargesDBA.java
+database/sql/CustomerDBA.java
+database/sql/FrontDeskRepresentativeDBA.java
+database/sql/ManagerDBA.java
+database/sql/OtherDBA.java
+database/sql/ReservationDBA.java
+database/sql/RoomDBA.java
+database/sql/RoomsDBA.java
+database/sql/StaffDBA.java
+
+(compile in CSC440 directory)
+javac -d ./classes/ database/actions/add/AddCharge.java database/actions/add/AddCustomer.java database/actions/add/AddFrontDeskRepresentative.java database/actions/add/AddReservation.java database/actions/add/AddRoom.java database/actions/add/AddStaff.java database/actions/delete/DeleteCharge.java database/actions/delete/DeleteCustomer.java database/actions/delete/DeleteFrontDeskRepresentative.java database/actions/delete/DeleteReservation.java database/actions/delete/DeleteRoom.java database/actions/delete/DeleteStaff.java database/actions/edit/EditCustomer.java database/actions/edit/EditFrontDeskRepresentative.java database/actions/edit/EditReservation.java database/actions/edit/EditRoom.java database/actions/edit/EditStaff.java database/actions/get/GetAllFrontDeskRepresentatives.java database/actions/get/GetAllManagers.java database/actions/get/GetAllStaff.java database/actions/get/GetAvRooms.java database/actions/get/GetCharges.java database/actions/get/GetCustomer.java database/actions/get/GetCustomerReservations.java database/actions/get/GetCustomerServedBy.java database/actions/get/GetFrontDeskRepresentative.java database/actions/get/GetManager.java database/actions/get/GetOccupancy.java database/actions/get/GetOccupancyPercentage.java database/actions/get/GetReservation.java database/actions/get/GetReservations.java database/actions/get/GetRoom.java database/actions/get/GetStaff.java database/actions/validate/ValidateCustomer.java database/actions/validate/ValidateFrontDeskRepresentative.java database/actions/validate/ValidateHotel.java database/actions/validate/ValidateManager.java database/actions/validate/ValidateStaff.java database/database/DBUtil.java database/database/JavaDatabaseConnection.java database/menus/CustomerMenu.java database/menus/FDRMenu.java database/menus/ManagerMenu.java database/menus/OriginalMenu.java database/menus/StaffMenu.java database/models/Bill.java database/models/Charge.java database/models/Customer.java database/models/Hotel.java database/models/Reservation.java database/models/Room.java database/models/Staff.java database/models/WolfVillasChain.java database/sql/ChargesDBA.java database/sql/CustomerDBA.java database/sql/FrontDeskRepresentativeDBA.java database/sql/ManagerDBA.java database/sql/OtherDBA.java database/sql/ReservationDBA.java database/sql/RoomDBA.java database/sql/RoomsDBA.java database/sql/StaffDBA.java database/actions/get/GetHotel.java database/sql/HotelDBA.java  database/models/PresidentialSuite.java database/actions/get/GetPresidentialSuite.java database/actions/validate/ValidateRoom.java 
+
+to run the program:
+
+cd classes
+java menus.OriginalMenu

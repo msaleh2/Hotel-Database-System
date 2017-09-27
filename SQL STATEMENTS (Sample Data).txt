@@ -1,0 +1,222 @@
+------------------------------------------------------------------------------------------------------
+------------------------------------SEQUENCE STATEMENTS-------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+DROP SEQUENCE hotel_seq;
+DROP SEQUENCE customer_seq;
+DROP SEQUENCE staff_seq;
+DROP SEQUENCE jobTitle_seq;
+DROP SEQUENCE roomType_seq;
+DROP SEQUENCE serviceType_seq;
+
+CREATE SEQUENCE hotel_seq MINVALUE 0 START WITH 0;
+CREATE SEQUENCE customer_seq MINVALUE 0 START WITH 0;
+CREATE SEQUENCE staff_seq MINVALUE 0 START WITH 0;
+CREATE SEQUENCE jobTitle_seq MINVALUE 0 START WITH 0;
+CREATE SEQUENCE roomType_seq MINVALUE 0 START WITH 0;
+CREATE SEQUENCE serviceType_seq MINVALUE 0 START WITH 0;
+
+------------------------------------------------------------------------------------------------------
+------------------------------------TABLE STATEMENTS-------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+DROP TABLE hotel CASCADE CONSTRAINTS;
+DROP TABLE employs CASCADE CONSTRAINTS;
+DROP TABLE customer CASCADE CONSTRAINTS;
+DROP TABLE staff CASCADE CONSTRAINTS;
+DROP TABLE manager CASCADE CONSTRAINTS;
+DROP TABLE jobTitleType CASCADE CONSTRAINTS;
+DROP TABLE frontDeskRepresentative CASCADE CONSTRAINTS;
+DROP TABLE room CASCADE CONSTRAINTS;
+DROP TABLE roomType CASCADE CONSTRAINTS;
+DROP TABLE presidentialSuite CASCADE CONSTRAINTS;
+DROP TABLE reservation CASCADE CONSTRAINTS;
+DROP TABLE serviceTypes CASCADE CONSTRAINTS;
+DROP TABLE charges CASCADE CONSTRAINTS;	
+
+CREATE TABLE hotel (
+hotelID INT PRIMARY KEY,
+address NVARCHAR2(64) NOT NULL,
+name NVARCHAR2(32) NOT NULL,
+phoneNumber INT NOT NULL
+);
+
+CREATE TABLE jobTitleType (
+id INT PRIMARY KEY,
+jobTitle NVARCHAR2(32) NOT NULL
+);
+
+CREATE TABLE staff (
+staffID INT PRIMARY KEY,
+name NVARCHAR2(32) NOT NULL,
+address NVARCHAR2(64) NOT NULL,
+age INT NOT NULL,
+dept NVARCHAR2(32) NOT NULL,
+phoneNumber INT NOT NULL,
+gender NVARCHAR2(32) NOT NULL,
+jobTitle INT NOT NULL,
+SSN INT NOT NULL,
+hotelID INT NOT NULL,
+salary INT NOT NULL,
+CONSTRAINT staff_jobTitle_FK FOREIGN KEY(jobTitle) REFERENCES jobTitleType(id) ON DELETE CASCADE,
+CONSTRAINT staff_hotelID_FK FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) ON DELETE CASCADE
+);
+
+CREATE TABLE manager (
+staffID INT PRIMARY KEY,
+CONSTRAINT manager_FK FOREIGN KEY(staffID) REFERENCES staff(staffID) ON DELETE CASCADE
+);
+
+CREATE TABLE frontDeskRepresentative (
+staffID INT PRIMARY KEY,
+CONSTRAINT frontDeskRepresentative_FK FOREIGN KEY(staffID) REFERENCES staff(staffID) ON DELETE CASCADE
+);
+
+CREATE TABLE employs (
+staffID INT NOT NULL,
+hotelID INT NOT NULL,
+CONSTRAINT employs_PK PRIMARY KEY(staffID, hotelID),
+CONSTRAINT employsStaffID_FK FOREIGN KEY(staffID) REFERENCES staff(staffID) ON DELETE CASCADE,
+CONSTRAINT employsHotelID_FK FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) ON DELETE CASCADE
+);
+
+CREATE TABLE customer (
+customerID INT PRIMARY KEY,
+name NVARCHAR2(32) NOT NULL,
+SSN INT NOT NULL,
+email NVARCHAR2(32) NOT NULL,
+address NVARCHAR2(64) NOT NULL,
+phoneNumber INT NOT NULL,
+gender INT NOT NULL,
+creditCard INT NOT NULL,
+billingAddress NVARCHAR2(64) NOT NULL
+);
+
+CREATE TABLE roomType (
+id INT PRIMARY KEY,
+roomType NVARCHAR2(32) NOT NULL
+);
+
+CREATE TABLE room (
+num INT NOT NULL,
+hotelID INT NOT NULL,
+rate INT NOT NULL,
+availability INT NOT NULL,
+occupancy INT NOT NULL,
+roomType INT NOT NULL,
+CONSTRAINT room_PK PRIMARY KEY(num, hotelID),
+CONSTRAINT roomNumber_FK FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) ON DELETE CASCADE,
+CONSTRAINT room_roomType_FK FOREIGN KEY(roomType) REFERENCES roomType(id) ON DELETE CASCADE
+);
+
+CREATE TABLE presidentialSuite (
+num INT NOT NULL,
+hotelID INT NOT NULL,
+roomStaffID INT,
+cateringStaffID INT,
+CONSTRAINT presSuite_PK PRIMARY KEY(num, hotelID),
+CONSTRAINT presSuite_HotelID_FK FOREIGN KEY(hotelID) REFERENCES hotel(hotelID) ON DELETE CASCADE,
+CONSTRAINT presSuite_num_FK FOREIGN KEY(num,hotelID) REFERENCES room(num,hotelID) ON DELETE CASCADE,
+CONSTRAINT presSuite_roomStaffID_FK FOREIGN KEY(roomStaffID) REFERENCES staff(staffID) ON DELETE CASCADE,
+CONSTRAINT presSuite_cateringStaffID_FK FOREIGN KEY(cateringStaffID) REFERENCES staff(staffID) ON DELETE CASCADE
+);
+
+CREATE TABLE reservation (
+roomNumber INT NOT NULL,
+hotelID INT NOT NULL,
+customerID INT NOT NULL,
+checkInDate DATE NOT NULL,
+checkOutDate DATE,
+balance INT NOT NULL,
+CONSTRAINT reservation_PK PRIMARY KEY(roomNumber, customerID, checkInDate),
+CONSTRAINT reservation_roomNumber_FK FOREIGN KEY(roomNumber, hotelID) REFERENCES room(num, hotelID) ON DELETE CASCADE,
+CONSTRAINT reservation_customerID_FK FOREIGN KEY(customerID) REFERENCES customer(customerID) ON DELETE CASCADE
+);
+
+CREATE TABLE serviceTypes (
+id INT PRIMARY KEY,
+serviceType NVARCHAR2(32) NOT NULL
+);
+
+CREATE TABLE charges (
+roomNumber INT NOT NULL,
+hotelID INT NOT NULL,
+customerID INT NOT NULL,
+staffID INT NOT NULL,
+serviceType INT NOT NULL,
+serviceCounter INT NOT NULL,
+amount INT NOT NULL,
+CONSTRAINT charges_PK PRIMARY KEY(roomNumber, customerID, serviceType, serviceCounter),
+CONSTRAINT charges_roomNumber_FK FOREIGN KEY(roomNumber, hotelID) REFERENCES room(num, hotelID) ON DELETE CASCADE,
+CONSTRAINT charges_customerID_FK FOREIGN KEY(customerID) REFERENCES customer(customerID) ON DELETE CASCADE,
+CONSTRAINT charges_staffID_FK FOREIGN KEY(staffID) REFERENCES staff(staffID) ON DELETE CASCADE,
+CONSTRAINT charges_serviceType_FK FOREIGN KEY(serviceType) REFERENCES serviceTypes(id) ON DELETE CASCADE
+);
+
+------------------------------------------------------------------------------------------------------
+------------------------------------INSERT STATEMENTS-------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+INSERT INTO hotel(hotelID, address, name, phoneNumber) VALUES (hotel_seq.nextval, '27 Timber Dr, Garner, NC 27529', 'WolfVilla', 9767281980);
+
+INSERT INTO jobTitleType(id, jobTitle) VALUES (jobTitle_seq.nextval, 'Manager');
+INSERT INTO jobTitleType(id, jobTitle) VALUES (jobTitle_seq.nextval, 'Front Desk Representative');
+INSERT INTO jobTitleType(id, jobTitle) VALUES (jobTitle_seq.nextval, 'Catering Staff');
+INSERT INTO jobTitleType(id, jobTitle) VALUES (jobTitle_seq.nextval, 'Room Staff');
+
+
+INSERT INTO staff(staffID, name, address, age, dept, phoneNumber, gender, jobTitle, SSN, hotelID , salary) 
+VALUES (staff_seq.NEXTVAL, 'Todd C. Chen', '1048, Avent Ferry Road, Raleigh, NC, 27606', 50, 'Administration', 9767281980, 0, 0, 132674793, 0, 64203);
+
+INSERT INTO staff(staffID, name, address, age, dept, phoneNumber, gender, jobTitle, SSN, hotelID , salary) 
+VALUES (staff_seq.NEXTVAL, 'David D. Clukey', '106, Cloverdale Ct, Raleigh, NC, 27607', 41, 'Administration', 9801311238, 0, 1, 409021234, 0, 64203);
+
+INSERT INTO staff(staffID, name, address, age, dept, phoneNumber, gender, jobTitle, SSN, hotelID , salary) 
+VALUES (staff_seq.NEXTVAL, 'James M. Gooden', '109, Cloverdale Ct, Raleigh, NC, 27607', 22, 'Catering', 9801871983, 0, 2, 143229089, 0, 33251);
+
+INSERT INTO manager(staffID) VALUES (0);
+
+INSERT INTO frontDeskRepresentative(staffID) VALUES (1);
+
+INSERT INTO employs(staffID, hotelID) VALUES (0, 0);
+INSERT INTO employs(staffID, hotelID) VALUES (1, 0);
+INSERT INTO employs(staffID, hotelID) VALUES (2, 0);
+
+
+INSERT INTO customer(customerID, name, SSN, email, address, phoneNumber, gender, creditCard, billingAddress) 
+VALUES (customer_seq.nextval, 'Carl T. Ashcraft', 144549090, 'carlashcraft@kmail.us', '881 Java Lane Graniteville, SC 29829', 3533434733, 0, 5184950505589328, '881 Java Lane Graniteville, SC 29829');
+
+INSERT INTO customer(customerID, name, SSN, email, address, phoneNumber, gender, creditCard, billingAddress) 
+VALUES (customer_seq.nextval, 'Angela J. Roberts', 678900900, 'angelaroberts@kmail.us', '2697 Stroop Hill Road Atlanta, GA 30342', 3533434733, 1, 5196591432385020, '2697 Stroop Hill RoadAtlanta, GA 30342');
+
+INSERT INTO roomType(id, roomType) VALUES (roomType_seq.nextval, 'Economy');
+INSERT INTO roomType(id, roomType) VALUES (roomType_seq.nextval, 'Deluxe');
+INSERT INTO roomType(id, roomType) VALUES (roomType_seq.nextval, 'Executive Suite');
+INSERT INTO roomType(id, roomType) VALUES (roomType_seq.nextval, 'Presidential Suite');
+
+INSERT INTO room(num, hotelID, rate, availability, occupancy, roomType) VALUES (101, 0, 150, 0, 2, 0);
+INSERT INTO room(num, hotelID, rate, availability, occupancy, roomType) VALUES (201, 0, 250, 0, 2, 2);
+INSERT INTO room(num, hotelID, rate, availability, occupancy, roomType) VALUES (301, 0, 350, 1, 2, 1);
+
+INSERT INTO reservation(roomNumber, hotelID, customerID, checkInDate, checkOutDate, balance) VALUES (101, 0, 0, to_date('12-NOV-2016 12:00', 'dd-mon-yyyy hh:mi P.M.'), '', 150);
+INSERT INTO reservation(roomNumber, hotelID, customerID, checkInDate, checkOutDate, balance) VALUES (201, 0, 1, to_date('14-NOV-2016 12:00', 'dd-mon-yyyy hh:mi P.M.'), '', 250);
+
+INSERT INTO serviceTypes(id, serviceType) VALUES (serviceType_seq.nextval, 'Laundry bill');
+INSERT INTO serviceTypes(id, serviceType) VALUES (serviceType_seq.nextval, 'Restaurant bill');
+INSERT INTO serviceTypes(id, serviceType) VALUES (serviceType_seq.nextval, 'Taxi bill');
+INSERT INTO serviceTypes(id, serviceType) VALUES (serviceType_seq.nextval, 'Phone bill');
+
+INSERT INTO charges(roomNumber, hotelID, customerID, staffID, serviceType, serviceCounter, amount) 
+VALUES (101, 0, 0, 2, 1, 1, 30);
+INSERT INTO charges(roomNumber, hotelID, customerID, staffID, serviceType, serviceCounter, amount) 
+VALUES (101, 0, 0, 2, 1, 2, 35);
+INSERT INTO charges(roomNumber, hotelID, customerID, staffID, serviceType, serviceCounter, amount) 
+VALUES (101, 0, 0, 2, 0, 1, 15);
+
+INSERT INTO charges(roomNumber, hotelID, customerID, staffID, serviceType, serviceCounter, amount) 
+VALUES (201, 0, 1, 2, 1, 1, 40);
+INSERT INTO charges(roomNumber, hotelID, customerID, staffID, serviceType, serviceCounter, amount) 
+VALUES (201, 0, 1, 2, 0, 1, 15);
+INSERT INTO charges(roomNumber, hotelID, customerID, staffID, serviceType, serviceCounter, amount) 
+VALUES (201, 0, 1, 2, 0, 2, 10);
+
